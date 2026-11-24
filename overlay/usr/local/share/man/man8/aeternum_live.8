@@ -1,0 +1,37 @@
+.Dd November 24, 2026
+.Dt AETERNUM_LIVE 8
+.Os
+.Sh NAME
+.Nm aeternum_live
+.Nd rc.d script for the Aeternum live session
+.Sh DESCRIPTION
+The
+.Nm
+script runs at boot of the live image, before
+.Xr lightdm 1 .
+It mounts a
+.Xr tmpfs 5
+file system on
+.Pa /home/admin ,
+keeps the existing contents of the home directory, adds the files from
+.Pa /usr/local/share/aeternum/skel ,
+and sets the owner to
+.Li admin .
+Changes made in the live session are kept in memory and are lost at shutdown.
+.Pp
+The script is removed by
+.Xr aeternum-installer 8
+from the installed system.
+.Sh FILES
+.Bl -tag -width indent
+.It Pa /usr/local/etc/rc.d/aeternum_live
+The script.
+.It Pa /usr/local/share/aeternum/skel
+Files copied to the home directory of
+.Li admin .
+.El
+.Sh SEE ALSO
+.Xr rc 8 ,
+.Xr aeternum 7
+.Sh AUTHORS
+.An Zef Lleshaj

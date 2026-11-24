@@ -1,0 +1,8 @@
+# Fine riga sempre LF: gli script girano su FreeBSD e non devono avere CRLF
+* text=auto eol=lf
+*.sh text eol=lf
+*.png binary
+*.mp4 binary
+*.iso binary
+overlay/usr/local/bin/* text eol=lf
+overlay/usr/local/sbin/* text eol=lf

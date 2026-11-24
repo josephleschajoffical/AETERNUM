@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Aeternum Wallpaper
+Exec=/usr/local/bin/aeternum-set-wallpaper
+Terminal=false

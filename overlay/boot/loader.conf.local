@@ -1,0 +1,12 @@
+# Aeternum Security OS - hardening applied at boot, before the kernel starts.
+# Read by the loader after /boot/loader.conf. See docs/HARDENING.md.
+
+# CPU speculative execution mitigations.
+# hw.ibrs_disable=0 enables IBRS; hw.spec_store_bypass_disable=1 enables the
+# Speculative Store Bypass mitigation. MDS, TAA and RNGDS are set in
+# /etc/sysctl.conf. Cost: some performance.
+hw.ibrs_disable="0"
+hw.spec_store_bypass_disable="1"
+
+# Disk encryption (GELI) is available for later use.
+geom_eli_load="YES"

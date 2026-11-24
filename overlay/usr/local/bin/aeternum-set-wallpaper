@@ -1,0 +1,7 @@
+#!/bin/sh
+sleep 3
+IMG=/usr/local/share/backgrounds/aeternum/aeternum-wallpaper.png
+[ -f "$IMG" ] || exit 0
+for p in $(xfconf-query -c xfce4-desktop -l | grep 'last-image'); do
+    xfconf-query -c xfce4-desktop -p "$p" -s "$IMG"
+done

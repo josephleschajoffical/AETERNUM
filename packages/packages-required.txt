@@ -1,0 +1,8 @@
+# Pacchetti indispensabili: se uno manca, la build si ferma.
+# Uno per riga. Le righe che iniziano con # sono commenti.
+xorg
+xfce
+lightdm
+lightdm-gtk-greeter
+dbus
+sudo

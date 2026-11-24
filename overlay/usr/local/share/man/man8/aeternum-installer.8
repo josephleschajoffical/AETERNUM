@@ -1,0 +1,87 @@
+.Dd November 24, 2026
+.Dt AETERNUM-INSTALLER 8
+.Os
+.Sh NAME
+.Nm aeternum-installer
+.Nd install Aeternum Security OS on a disk
+.Sh SYNOPSIS
+.Nm
+.Nm install-aeternum
+.Sh DESCRIPTION
+The
+.Nm
+utility copies the running live system to a disk of the machine, and makes
+that disk bootable in UEFI mode.
+It must be run as root.
+.Nm install-aeternum
+is the desktop launcher: it opens a terminal and runs
+.Nm
+through
+.Xr sudo 8 .
+.Pp
+The utility lists the disks reported by
+.Xr sysctl 8
+.Va kern.disks ,
+excluding optical drives and the boot medium, and asks for the name of the
+disk to use.
+It then asks for the word
+.Li INSTALLA
+as confirmation.
+.Pp
+.Sy All data on the selected disk is destroyed .
+.Pp
+The installation proceeds in these steps:
+.Bl -enum
+.It
+The disk is given a GPT scheme with a 260 MB EFI partition (label
+.Li aeternum-efi )
+and a UFS partition with soft updates using the rest of the disk (label
+.Li aeternum-root ) ,
+using
+.Xr gpart 8 ,
+.Xr newfs_msdos 8
+and
+.Xr newfs 8 .
+.It
+The live system is copied to the new root with
+.Xr tar 1 ,
+through a read-only
+.Xr nullfs 5
+mount of
+.Pa / .
+.It
+.Pa /etc/fstab ,
+.Pa /boot/loader.conf
+and
+.Pa /etc/rc.conf
+are written for the installed system, and the live-only files are removed.
+.It
+.Pa /boot/loader.efi
+is copied to
+.Pa EFI/BOOT/BOOTX64.EFI
+on the EFI partition.
+.El
+.Pp
+The installed system has the user
+.Li admin
+with the password
+.Li admin .
+.Sh FILES
+.Bl -tag -width indent
+.It Pa /usr/local/sbin/aeternum-installer
+The installer.
+.It Pa /usr/local/bin/install-aeternum
+The desktop launcher.
+.El
+.Sh EXIT STATUS
+.Ex -std
+.Sh SEE ALSO
+.Xr gpart 8 ,
+.Xr newfs 8 ,
+.Xr newfs_msdos 8 ,
+.Xr aeternum 7
+.Sh BUGS
+UEFI only.
+The installer has not yet been tested on physical hardware.
+.Sh AUTHORS
+.An Zef Lleshaj

@@ -1,0 +1,6 @@
+#!/bin/sh
+V=/usr/local/share/aeternum/boot-animation.mp4
+[ -f "$V" ] || exit 0
+command -v mpv >/dev/null 2>&1 || exit 0
+exec mpv --fullscreen --ontop --no-osc --no-input-default-bindings --no-audio \
+    --really-quiet --keep-open=no "$V"

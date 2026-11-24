@@ -1,0 +1,35 @@
+.Dd November 24, 2026
+.Dt AETERNUM-SET-WALLPAPER 1
+.Os
+.Sh NAME
+.Nm aeternum-set-wallpaper
+.Nd set the Aeternum desktop wallpaper
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+The
+.Nm
+utility waits three seconds for the XFCE desktop to start, then sets the
+Aeternum wallpaper on every desktop and monitor entry reported by
+.Xr xfconf-query 1
+for the
+.Li xfce4-desktop
+channel.
+It is started by the autostart entry
+.Pa aeternum-wallpaper.desktop .
+.Pp
+If the wallpaper file does not exist,
+.Nm
+exits silently with status 0.
+.Sh FILES
+.Bl -tag -width indent
+.It Pa /usr/local/share/backgrounds/aeternum/aeternum-wallpaper.png
+The wallpaper.
+.It Pa /usr/local/share/aeternum/skel/.config/autostart/aeternum-wallpaper.desktop
+Autostart entry.
+.El
+.Sh SEE ALSO
+.Xr xfconf-query 1 ,
+.Xr aeternum 7
+.Sh AUTHORS
+.An Zef Lleshaj

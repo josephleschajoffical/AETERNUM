@@ -1,0 +1,25 @@
+#!/bin/sh
+# PROVIDE: aeternum_live
+# REQUIRE: tmp var
+# BEFORE: lightdm
+
+. /etc/rc.subr
+
+name="aeternum_live"
+rcvar="aeternum_live_enable"
+start_cmd="aeternum_live_start"
+stop_cmd=":"
+
+aeternum_live_start()
+{
+    rm -rf /tmp/.aeternum-home
+    cp -Rp /home/admin /tmp/.aeternum-home
+    mount -t tmpfs -o mode=0755 tmpfs /home/admin
+    cp -Rp /tmp/.aeternum-home/. /home/admin/
+    cp -Rp /usr/local/share/aeternum/skel/. /home/admin/
+    chown -R admin:admin /home/admin
+    rm -rf /tmp/.aeternum-home
+}
+
+load_rc_config $name
+run_rc_command "$1"

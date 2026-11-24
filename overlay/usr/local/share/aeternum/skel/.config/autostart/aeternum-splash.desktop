@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Aeternum Splash
+Exec=/usr/local/bin/aeternum-splash
+X-GNOME-Autostart-enabled=true
+NoDisplay=true

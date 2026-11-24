@@ -1,0 +1,50 @@
+# AETERNUM - kernel configuration for Aeternum Security OS
+#
+# Install as /usr/src/sys/amd64/conf/AETERNUM and build with:
+#   make buildkernel KERNCONF=AETERNUM
+# See docs/HARDENING.md. Status: draft, not yet built.
+
+include GENERIC
+ident   AETERNUM
+
+# --- Mandatory Access Control ---------------------------------------------
+# "options MAC" (the framework) is already in GENERIC. These policies are
+# compiled into the kernel, so they cannot be unloaded as modules.
+# They do nothing until rules or labels are configured.
+options         MAC_BSDEXTENDED         # file system firewall, rules set with ugidfw(8)
+options         MAC_PORTACL             # restrict binding of ports per user or group
+options         MAC_SEEOTHERUIDS        # hide other users' processes and sockets
+# MAC_BIBA and MAC_MLS are deliberately NOT enabled: they enforce labels on
+# every process and file and make the system unusable unless labelling is
+# designed and tested first. Add them in a later stage, in a test VM.
+
+# --- Packet filter built in (not a module) ---------------------------------
+# pf is NOT part of GENERIC, so it is added here.
+device          pf
+device          pflog
+# pfsync (state synchronisation between firewalls) is not needed on a single
+# machine and only adds code, so it is left out.
+
+# --- Cryptography and audit ------------------------------------------------
+# "device crypto", "device aesni" and "options AUDIT" are already in GENERIC.
+
+# --- IPsec built in --------------------------------------------------------
+# GENERIC has IPSEC_SUPPORT (IPsec as loadable module); replace it by the
+# built-in IPsec stack. IPsec requires "device crypto".
+nooptions       IPSEC_SUPPORT
+options         IPSEC
+# TCP_SIGNATURE (RFC 2385 TCP-MD5) is not enabled: it is only used for BGP
+# sessions and adds code without benefit on a desktop or analysis system.
+
+# --- Remove compatibility code for old FreeBSD releases --------------------
+# Smaller attack surface. COMPAT_FREEBSD32 (32-bit programs), COMPAT_FREEBSD14
+# and COMPAT_FREEBSD15 are kept.
+nooptions       COMPAT_FREEBSD4
+nooptions       COMPAT_FREEBSD5
+nooptions       COMPAT_FREEBSD6
+nooptions       COMPAT_FREEBSD7
+nooptions       COMPAT_FREEBSD9
+nooptions       COMPAT_FREEBSD10
+nooptions       COMPAT_FREEBSD11
+nooptions       COMPAT_FREEBSD12
+nooptions       COMPAT_FREEBSD13

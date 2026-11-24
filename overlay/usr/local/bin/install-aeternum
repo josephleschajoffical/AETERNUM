@@ -1,0 +1,2 @@
+#!/bin/sh
+xfce4-terminal --title="Installazione Aeternum Security OS" -x sudo /usr/local/sbin/aeternum-installer

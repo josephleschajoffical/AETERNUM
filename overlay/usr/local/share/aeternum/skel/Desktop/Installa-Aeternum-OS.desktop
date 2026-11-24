@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Installa Aeternum Security OS
+Comment=Installa il sistema su disco rigido o SSD
+Exec=/usr/local/bin/install-aeternum
+Icon=/usr/local/share/pixmaps/aeternum-logo.png
+Terminal=false
+Categories=System;

@@ -1,0 +1,38 @@
+.Dd November 24, 2026
+.Dt AETERNUM-SPLASH 1
+.Os
+.Sh NAME
+.Nm aeternum-splash
+.Nd play the Aeternum boot animation
+.Sh SYNOPSIS
+.Nm
+.Sh DESCRIPTION
+The
+.Nm
+utility plays the Aeternum Security OS boot animation full screen, on top of
+other windows, without sound and without controls.
+It is started from the desktop session by the autostart entry
+.Pa aeternum-splash.desktop ,
+so the animation plays after the user logs in.
+.Pp
+The animation is the file
+.Pa /usr/local/share/aeternum/boot-animation.mp4 ,
+played with
+.Xr mpv 1 .
+If the file or
+.Xr mpv 1
+is missing,
+.Nm
+exits silently with status 0.
+.Sh FILES
+.Bl -tag -width indent
+.It Pa /usr/local/share/aeternum/boot-animation.mp4
+The animation.
+.It Pa /usr/local/share/aeternum/skel/.config/autostart/aeternum-splash.desktop
+Autostart entry.
+.El
+.Sh SEE ALSO
+.Xr mpv 1 ,
+.Xr aeternum 7
+.Sh AUTHORS
+.An Zef Lleshaj

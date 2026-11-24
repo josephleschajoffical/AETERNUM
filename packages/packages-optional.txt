@@ -1,0 +1,13 @@
+# Pacchetti desktop opzionali (driver, font, programmi): se uno manca, la build continua
+# e lo segnala. Uno per riga.
+xfce4-goodies
+drm-kmod
+xf86-video-intel
+xf86-video-amdgpu
+mpv
+noto-basic
+noto-extra
+noto-emoji
+firefox
+networkmgr
+zenity

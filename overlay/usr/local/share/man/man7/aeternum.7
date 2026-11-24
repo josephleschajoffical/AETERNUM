@@ -1,0 +1,44 @@
+.Dd November 24, 2026
+.Dt AETERNUM 7
+.Os
+.Sh NAME
+.Nm aeternum
+.Nd Aeternum Security OS overview
+.Sh DESCRIPTION
+Aeternum Security OS is a live and installable operating system based on
+.Fx 15.1
+(amd64), for security work.
+It provides the XFCE desktop, the
+.Xr pf 4
+firewall enabled by default, and a set of security tools installed as
+packages.
+The image boots in UEFI mode.
+.Pp
+The default user is
+.Li admin
+with the password
+.Li admin ;
+the same password is set for
+.Li root .
+.Sh FILES
+.Bl -tag -width indent
+.It Pa /etc/pf.conf
+Firewall rules.
+.It Pa /etc/sysctl.conf
+Kernel and network hardening settings.
+.It Pa /boot/loader.conf.local
+Boot-time tunables, read after
+.Pa /boot/loader.conf .
+.It Pa /usr/local/share/aeternum
+Skeleton files, boot animation.
+.El
+.Sh SEE ALSO
+.Xr aeternum-installer 8 ,
+.Xr aeternum_live 8 ,
+.Xr aeternum-splash 1 ,
+.Xr aeternum-set-wallpaper 1 ,
+.Xr pf.conf 5 ,
+.Xr sysctl.conf 5 ,
+.Xr loader.conf 5
+.Sh AUTHORS
+.An Zef Lleshaj

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aeternum Security OS</title>
+<style>
+  :root { --cyan:#00d4ff; --orange:#ff6a00; --bg:#070d14; --text:#e8f1f8; --muted:#8aa0b4; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--text);
+         background: var(--bg) url("assets/aeternum-wallpaper.png") center/cover fixed; line-height:1.55; }
+  .wrap { max-width:720px; margin:0 auto; padding:32px 20px 64px; background:rgba(7,13,20,.82); min-height:100vh; }
+  .logo { width:120px; display:block; margin:8px auto 0; }
+  h1 { text-align:center; letter-spacing:.18em; margin:12px 0 0; font-size:2rem; }
+  .sub { text-align:center; color:var(--cyan); letter-spacing:.3em; font-size:.95rem; margin:4px 0; }
+  .tag { text-align:center; color:var(--muted); letter-spacing:.2em; font-size:.75rem; margin-bottom:28px; }
+  .btn { display:block; text-align:center; padding:16px; border-radius:10px; font-weight:700; text-decoration:none;
+         color:#001018; background:linear-gradient(90deg,var(--cyan),var(--orange)); font-size:1.1rem; margin:20px 0 6px; }
+  .small { text-align:center; color:var(--muted); font-size:.85rem; margin:0 0 28px; }
+  h2 { color:var(--cyan); font-size:1.05rem; letter-spacing:.08em; margin:32px 0 8px; border-bottom:1px solid #16303f; padding-bottom:6px; }
+  ul, ol { padding-left:22px; margin:8px 0; }
+  code { background:#0f1c28; padding:2px 6px; border-radius:4px; color:#9fe8ff; }
+  .warn { border-left:3px solid var(--orange); padding:8px 12px; background:#1a120a; margin:12px 0; color:#ffd9b8; font-size:.92rem; }
+  footer { margin-top:40px; text-align:center; color:var(--muted); font-size:.8rem; }
+  a { color:var(--cyan); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="assets/aeternum-logo.png" alt="Logo Aeternum">
+  <h1>AETERNUM</h1>
+  <div class="sub">SECURITY OS</div>
+  <div class="tag">RESILIENT • DEFENSIVE • HARDENED</div>
+
+  <p>Sistema operativo per la sicurezza informatica basato su <strong>FreeBSD 15.1</strong> (amd64), con desktop XFCE,
+     firewall attivo e strumenti di sicurezza preinstallati. Progetto open source, licenza BSD.</p>
+
+  <div class="warn"><strong>Versione 1.0, prima versione.</strong> Le lingue aggiuntive e l'antivirus non sono ancora disponibili.
+     Usalo su un computer di prova o da chiavetta.</div>
+
+  <a class="btn" href="https://nightly.link/josephleschajoffical/AETERNUM/workflows/build-os/main/aeternum-security-os-iso.zip">⬇ Scarica l'ISO (circa 3 GB)</a>
+  <p class="small">Il download parte direttamente, senza account. Il file è un archivio ZIP con l'immagine <code>.iso</code> e il file <code>.sha256</code>. Prima va estratto sul computer.</p>
+
+  <h2>Come usarlo</h2>
+  <ol>
+    <li>Estrai lo ZIP e ottieni il file <code>.iso</code>.</li>
+    <li>Scrivilo su una chiavetta USB (almeno 8 GB) con <a href="https://rufus.ie">Rufus</a>, scegliendo la modalità <strong>Immagine DD</strong>. Il contenuto della chiavetta viene cancellato.</li>
+    <li>Avvia il PC dalla chiavetta in modalità <strong>UEFI</strong> (di solito F12, F10, Esc o F2 all'accensione). Se non parte, disattiva Secure Boot.</li>
+    <li>Entra con utente <code>admin</code> e password <code>admin</code> (solo per prova: cambiala).</li>
+  </ol>
+
+  <h2>Installazione sul disco</h2>
+  <p>Dal desktop live usa l'icona <strong>Installa Aeternum Security OS</strong>. Funziona su PC UEFI e <strong>cancella il disco scelto</strong>.
+     Questa funzione è sperimentale.</p>
+
+  <h2>Verifica del file</h2>
+  <p>Confronta lo SHA256 del file <code>.iso</code> con quello nel file <code>.sha256</code> dentro lo ZIP.</p>
+
+  <h2>Codice sorgente</h2>
+  <p>Tutto il progetto è su GitHub: <a href="https://github.com/josephleschajoffical/AETERNUM">github.com/josephleschajoffical/AETERNUM</a></p>
+
+  <footer>Aeternum Security OS • basato su FreeBSD • Licenza BSD • Creato da Zef Lleshaj, sviluppatore, sistemista e tecnico informatico • Sviluppato a Roma, Italia</footer>
+</div>
+</body>
+</html>

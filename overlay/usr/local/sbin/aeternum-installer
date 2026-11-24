@@ -1,0 +1,94 @@
+#!/bin/sh
+fail() { echo; echo "ERRORE: $1"; echo "Installazione interrotta. Premi Invio per chiudere."; read _x; exit 1; }
+[ "$(id -u)" = 0 ] || fail "servono i permessi di root"
+
+echo "=============================================="
+echo "  Installazione Aeternum Security OS (UEFI)"
+echo "=============================================="
+LIVE=$(glabel status 2>/dev/null | awk '/AETERNUM_OS/ {print $3}' | head -1)
+echo
+echo "Dischi disponibili (la chiavetta di avvio e' esclusa):"
+LIST=""
+for d in $(sysctl -n kern.disks); do
+    case "$d" in cd*) continue;; esac
+    case "$LIVE" in "$d"|"$d"p*) continue;; esac
+    SIZE=$(diskinfo "$d" 2>/dev/null | awk '{printf "%.0f GB", $3/1000000000}')
+    echo "   $d   $SIZE"
+    LIST="$LIST $d"
+done
+[ -n "$LIST" ] || fail "nessun disco trovato"
+echo
+printf "Scrivi il nome del disco su cui installare (es. nda0, ada0): "
+read DISK
+case " $LIST " in *" $DISK "*) ;; *) fail "disco non valido";; esac
+echo
+echo "ATTENZIONE: TUTTO il contenuto di $DISK verra' CANCELLATO."
+printf "Per continuare scrivi INSTALLA: "
+read OK
+[ "$OK" = "INSTALLA" ] || fail "annullato dall'utente"
+
+echo ">>> Partizioni su $DISK..."
+gpart destroy -F "$DISK" >/dev/null 2>&1
+gpart create -s gpt "$DISK" || fail "gpart create"
+gpart add -t efi -a 1m -s 260m -l aeternum-efi "$DISK" || fail "partizione EFI"
+gpart add -t freebsd-ufs -a 1m -l aeternum-root "$DISK" || fail "partizione di sistema"
+newfs_msdos -F 32 -c 1 "/dev/${DISK}p1" || fail "formattazione EFI"
+newfs -U -L aeternum "/dev/${DISK}p2" || fail "formattazione sistema"
+mount "/dev/${DISK}p2" /mnt || fail "mount del disco"
+
+echo ">>> Copia del sistema completo (alcuni minuti)..."
+kldload nullfs 2>/dev/null
+mkdir -p /tmp/liveroot
+if mount -t nullfs -o ro / /tmp/liveroot 2>/dev/null; then
+    tar -cf - -C /tmp/liveroot . | tar -xpf - -C /mnt || fail "copia dei file"
+    umount /tmp/liveroot
+else
+    tar -cf - --one-file-system -C / . | tar -xpf - -C /mnt || fail "copia dei file"
+fi
+
+echo ">>> Configurazione..."
+mkdir -p /mnt/dev /mnt/proc /mnt/tmp /mnt/var /mnt/boot/efi
+mtree -deU -f /mnt/etc/mtree/BSD.var.dist -p /mnt/var >/dev/null 2>&1
+chmod 1777 /mnt/tmp /mnt/var/tmp
+cat > /mnt/etc/fstab << FSTABEOF
+/dev/gpt/aeternum-root  /          ufs      rw  1  1
+/dev/gpt/aeternum-efi   /boot/efi  msdosfs  rw  2  2
+FSTABEOF
+cat > /mnt/boot/loader.conf << LOADEREOF
+loader_brand="aeternum"
+loader_logo="none"
+autoboot_delay="3"
+vfs.root.mountfrom="ufs:/dev/gpt/aeternum-root"
+LOADEREOF
+cat > /mnt/etc/rc.conf << RCCONFEOF
+hostname="aeternum-os"
+dbus_enable="YES"
+lightdm_enable="YES"
+pf_enable="YES"
+pflog_enable="YES"
+kld_list="i915kms amdgpu"
+ifconfig_DEFAULT="DHCP"
+sendmail_enable="NONE"
+RCCONFEOF
+rm -f /mnt/usr/local/etc/rc.d/aeternum_live
+rm -f /mnt/usr/local/share/aeternum/skel/Desktop/Installa-Aeternum-OS.desktop
+rm -f /mnt/home/admin/Desktop/Installa-Aeternum-OS.desktop
+cp -Rp /mnt/usr/local/share/aeternum/skel/. /mnt/home/admin/ 2>/dev/null
+chown -R admin:admin /mnt/home/admin
+
+echo ">>> Avvio UEFI..."
+mount_msdosfs "/dev/${DISK}p1" /mnt/boot/efi || fail "mount EFI"
+mkdir -p /mnt/boot/efi/EFI/BOOT
+cp /mnt/boot/loader.efi /mnt/boot/efi/EFI/BOOT/BOOTX64.EFI || fail "copia del bootloader"
+umount /mnt/boot/efi
+sync
+umount /mnt
+
+echo
+echo "=============================================="
+echo "  INSTALLAZIONE COMPLETATA"
+echo "  Utente: admin   Password: admin"
+echo "  Spegni, togli la chiavetta e riaccendi."
+echo "=============================================="
+printf "Premi Invio per chiudere."
+read _x
