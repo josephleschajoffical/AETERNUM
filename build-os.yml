@@ -1,0 +1,34 @@
+name: build-iso
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Compila ISO reale FreeBSD amd64
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Costruisci ISO dentro FreeBSD 15.1
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15.1"
+          usesh: true
+          mem: 4096
+          run: |
+            chmod +x scripts/build-aeternum-iso.sh
+            ./scripts/build-aeternum-iso.sh
+
+      - name: Carica ISO scaricabile su GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: aeternum-security-os-iso
+          path: |
+            Aeternum-Security-OS-1.0-amd64.iso
+            Aeternum-Security-OS-1.0-amd64.iso.sha256
+          if-no-files-found: error

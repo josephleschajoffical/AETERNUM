@@ -1,0 +1,41 @@
+name: build-kernel
+
+# Compila il kernel AETERNUM (kernel/AETERNUM) dentro FreeBSD 15.1.
+# Si avvia a mano: Actions -> build-kernel -> Run workflow.
+on:
+  workflow_dispatch:
+
+jobs:
+  kernel:
+    name: Compila kernel AETERNUM
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compila il kernel dentro FreeBSD 15.1
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15.1"
+          usesh: true
+          mem: 4096
+          run: |
+            set -e
+            fetch -T 60 -o /tmp/src.txz https://download.freebsd.org/releases/amd64/15.1-RELEASE/src.txz
+            tar -C / -xf /tmp/src.txz
+            cp kernel/AETERNUM /usr/src/sys/amd64/conf/AETERNUM
+            cd /usr/src
+            make -j"$(sysctl -n hw.ncpu)" buildkernel KERNCONF=AETERNUM
+            mkdir -p /var/tmp/kernel-stage
+            make installkernel KERNCONF=AETERNUM DESTDIR=/var/tmp/kernel-stage
+            cd "$OLDPWD"
+            tar -cJf aeternum-kernel.txz -C /var/tmp/kernel-stage .
+            ls -l aeternum-kernel.txz
+
+      - name: Carica il kernel
+        uses: actions/upload-artifact@v4
+        with:
+          name: aeternum-kernel
+          path: aeternum-kernel.txz
+          if-no-files-found: error

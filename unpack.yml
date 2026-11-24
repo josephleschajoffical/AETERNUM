@@ -1,0 +1,31 @@
+name: unpack
+
+# Estrae aeternum-struttura.zip (caricato nella radice del repository) e mette
+# tutte le cartelle e i file al loro posto. Si avvia a mano: Actions -> unpack -> Run workflow.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    name: Estrai lo ZIP nel repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Estrai e riordina
+        run: |
+          ZIP="$(ls aeternum-struttura*.zip | head -1)"
+          echo "Uso: $ZIP"
+          test -n "$ZIP"
+          unzip -o "$ZIP" -x '.github/*' -d .
+          rm -f "$ZIP" aeternum-logo.png aeternum-wallpaper.png aeternum-wordmark.png build-aeternum-iso.sh
+          chmod +x scripts/*.sh tests/*.sh
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Struttura ordinata del repository (versione 1)"
+          git push
+          echo "Fatto. Ora aggiorna i file in .github/workflows (build-os.yml e check.yml)."
